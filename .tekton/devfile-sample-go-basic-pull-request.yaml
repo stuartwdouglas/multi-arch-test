@@ -274,15 +274,16 @@ spec:
       workspaces:
         - name: source
           workspace: workspace
-
     - name: build-container
       params:
         - name: IMAGE
           value: $(params.output-image)
         - name: COMMIT_SHA
           value: $(tasks.clone-repository.results.commit)
-        - name: ARCHS
-          value: amd64 arm64
+        - name: IMAGE_MANIFESTS
+          value:
+            - $(tasks.build-container-amd64.results.IMAGE_URL)@$(tasks.build-container-amd64.results.IMAGE_DIGEST)
+            - $(tasks.build-container-arm64.results.IMAGE_URL)@$(tasks.build-container-arm64.results.IMAGE_DIGEST)
       runAfter:
         - build-container-amd64
         - build-container-arm64
